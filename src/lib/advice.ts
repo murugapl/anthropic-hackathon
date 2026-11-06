@@ -21,11 +21,16 @@ export function buildAdviceFeed(week: WeekEntry, budget: BudgetState): AdviceCar
   const cards: AdviceCard[] = []
 
   if (week.flags.sleepDebt) {
+    const isPregnant = week.postpartumWeek === null
     const product = productById('nursing-pillow')
     cards.push({
       id: 'sleep',
-      title: "You haven't been sleeping much this week",
-      body: 'A supportive pillow can make side-sleeping and feeding easier on your back.',
+      title: isPregnant
+        ? "Third-trimester sleep has been rough this week"
+        : "You haven't been sleeping much this week",
+      body: isPregnant
+        ? 'A supportive pillow can make side-sleeping easier as your bump grows now, and it keeps helping with feeding positions after the baby arrives.'
+        : 'A supportive pillow can make side-sleeping and feeding easier on your back.',
       product,
       withinBudget: isWithinBudget(budget, product.price),
     })
