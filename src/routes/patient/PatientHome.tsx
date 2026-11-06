@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DEFAULT_WEEK_INDEX, jennyTimeline, patientProfile } from '../../data/patient'
+import { getFunFact } from '../../data/funFacts'
+import { prepareTopics } from '../../data/prepareTopics'
 import { buildAdviceFeed } from '../../lib/advice'
 import { useBudget } from '../../state/budget'
 
@@ -35,6 +37,7 @@ export default function PatientHome() {
   const week = jennyTimeline[weekIndex]
   const advice = buildAdviceFeed(week, budget)
   const topCard = advice[0]
+  const funFact = getFunFact(week.weekIndex)
 
   return (
     <div className="px-5 py-2">
@@ -57,6 +60,13 @@ export default function PatientHome() {
         />
         <p className="mt-1 text-xs text-ink-500">{week.note}</p>
       </div>
+
+      {funFact && (
+        <div className="mt-3 rounded-2xl bg-sage-100 p-3 text-sm text-sage-700">
+          {week.postpartumWeek === null ? '🫛 ' : '✨ '}
+          {funFact}
+        </div>
+      )}
 
       <div className="mt-4 flex gap-2">
         <StatChip label="Sleep" value={`${week.wearables.sleepHours}h`} flagged={week.flags.sleepDebt} />
@@ -109,9 +119,32 @@ export default function PatientHome() {
         )}
       </div>
 
+      <div className="mt-6">
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
+            How to prepare for
+          </p>
+          <Link to="/patient/prepare" className="text-xs text-terracotta-600">
+            See all →
+          </Link>
+        </div>
+        <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+          {prepareTopics.map((t) => (
+            <Link
+              key={t.id}
+              to={`/patient/prepare/${t.id}`}
+              className="w-40 shrink-0 rounded-2xl border border-sand-200 bg-white p-3 hover:border-terracotta-300"
+            >
+              <h3 className="text-sm font-medium text-ink-900">{t.title}</h3>
+              <p className="mt-1 text-xs text-ink-500">{t.summary}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       <Link
         to="/patient/care"
-        className="mt-6 block rounded-2xl border border-sand-200 bg-white p-4 hover:border-sage-300"
+        className="mt-6 mb-2 block rounded-2xl border border-sand-200 bg-white p-4 hover:border-sage-300"
       >
         <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
           Your care team

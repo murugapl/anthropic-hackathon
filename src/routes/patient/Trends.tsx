@@ -24,6 +24,38 @@ const chartData = jennyTimeline.map((w) => ({
   mood: w.moodScore,
 }))
 
+function average(values: number[]): number {
+  return values.reduce((a, b) => a + b, 0) / values.length
+}
+
+function compareLabel(latest: number, avg: number, unit: string, higherIsBetter: boolean): string {
+  const diff = latest - avg
+  if (Math.abs(diff) < 0.2) return `right at your recent average (${avg.toFixed(1)}${unit})`
+  const better = higherIsBetter ? diff > 0 : diff < 0
+  return `${better ? 'better' : 'a bit off'} your recent average of ${avg.toFixed(1)}${unit}`
+}
+
+function QuickSummary() {
+  const latest = jennyTimeline[jennyTimeline.length - 1]
+  const recent = jennyTimeline.slice(-5, -1)
+  const avgSleep = average(recent.map((w) => w.wearables.sleepHours))
+  const avgMood = average(recent.map((w) => w.moodScore))
+
+  return (
+    <div className="mt-4 rounded-2xl bg-terracotta-50 p-4">
+      <p className="text-[10px] font-medium uppercase tracking-wide text-terracotta-700">
+        This week, compared to your last month
+      </p>
+      <p className="mt-1 text-sm text-ink-900">
+        Sleep: {latest.wearables.sleepHours}h — {compareLabel(latest.wearables.sleepHours, avgSleep, 'h', true)}.
+      </p>
+      <p className="mt-1 text-sm text-ink-900">
+        Mood: {latest.moodScore}/10 — {compareLabel(latest.moodScore, avgMood, '/10', true)}.
+      </p>
+    </div>
+  )
+}
+
 function ChartCard({
   title,
   subtitle,
@@ -45,10 +77,12 @@ function ChartCard({
 export default function Trends() {
   return (
     <div className="px-5 py-2">
-      <h1 className="text-xl font-semibold text-ink-900">Your trends</h1>
+      <h1 className="text-xl font-semibold text-ink-900">Your data</h1>
       <p className="text-sm text-ink-500">
         Pregnancy (P) through 20 weeks postpartum (W).
       </p>
+
+      <QuickSummary />
 
       <ChartCard title="Sleep" subtitle="Hours per night">
         <ResponsiveContainer width="100%" height="100%">

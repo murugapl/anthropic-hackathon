@@ -36,7 +36,7 @@ function ChatIcon({ active }: { active: boolean }) {
   )
 }
 
-function CareIcon({ active }: { active: boolean }) {
+function MindIcon({ active }: { active: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? '#bc6240' : '#b8b2a9'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 21s-7-4.4-9.5-8.8C.9 9 2.3 5.5 5.6 5A4.7 4.7 0 0 1 12 7.3 4.7 4.7 0 0 1 18.4 5c3.3.5 4.7 4 3.1 7.2C19 16.6 12 21 12 21Z" />
@@ -44,10 +44,20 @@ function CareIcon({ active }: { active: boolean }) {
   )
 }
 
+function CareIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? '#bc6240' : '#b8b2a9'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 8v8M8 12h8" />
+    </svg>
+  )
+}
+
 const TABS = [
   { to: '/patient', label: 'Home', icon: HomeIcon, end: true },
-  { to: '/patient/trends', label: 'Trends', icon: TrendsIcon, end: false },
+  { to: '/patient/trends', label: 'Data', icon: TrendsIcon, end: false },
   { to: '/patient/shop', label: 'Shop', icon: ShopIcon, end: false },
+  { to: '/patient/mind', label: 'Mind', icon: MindIcon, end: false },
   { to: '/patient/chat', label: 'Chat', icon: ChatIcon, end: false },
   { to: '/patient/care', label: 'Care', icon: CareIcon, end: false },
 ]
