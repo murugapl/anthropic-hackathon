@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { DEFAULT_WEEK_INDEX, jennyTimeline, patientProfile } from '../../data/patient'
 import { getFunFact } from '../../data/funFacts'
 import { FUN_FACT_ICONS } from '../../components/FunFactIcons'
-import { prepareTopics } from '../../data/prepareTopics'
+import { getStageForWeek, prepareTopicsForStage, STAGE_LABELS } from '../../data/prepareTopics'
 import { buildAdviceFeed } from '../../lib/advice'
 import { useBudget } from '../../state/budget'
 
@@ -39,6 +39,8 @@ export default function PatientHome() {
   const advice = buildAdviceFeed(week, budget)
   const topCard = advice[0]
   const funFact = getFunFact(week.weekIndex)
+  const stage = getStageForWeek(week)
+  const stageTopics = prepareTopicsForStage(stage)
 
   return (
     <div className="px-5 py-2">
@@ -134,15 +136,18 @@ export default function PatientHome() {
 
       <div className="mt-6">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
-            How to prepare for
-          </p>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
+              How to prepare for
+            </p>
+            <p className="text-xs text-ink-500">{STAGE_LABELS[stage]}, right now</p>
+          </div>
           <Link to="/patient/prepare" className="text-xs text-terracotta-600">
             See all →
           </Link>
         </div>
         <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
-          {prepareTopics.map((t) => (
+          {stageTopics.map((t) => (
             <Link
               key={t.id}
               to={`/patient/prepare/${t.id}`}
