@@ -1,5 +1,6 @@
 import type { WeekEntry } from '../data/patient'
 import { products } from '../data/products'
+import type { PatientFlag } from './doctorSummary'
 import type { BudgetState } from '../state/budget'
 
 export function buildAskPeriSystemPrompt(week: WeekEntry, budget: BudgetState): string {
@@ -24,4 +25,26 @@ Ground rules:
 Product catalog:
 ${catalog}
 `
+}
+
+export const REFERRAL_SYSTEM_PROMPT = `You write 6-week postpartum summaries and specialist referrals for a doctor, based on structured data already computed from the patient's wearable and check-in history (the clinical facts are given to you - you are writing them up, not deciding them).
+
+Write, in under 200 words:
+1. A short plain-language summary (2-3 sentences) of how the patient is doing.
+2. Her key flags, with the supporting data already provided.
+3. A specific referral recommendation - which kind of specialist, why, and what they should know.
+
+Frame findings as "the data suggests" or "warrants evaluation," never as a diagnosis you are making yourself. Write for a clinician audience, but keep it clear enough that the patient can read the same document.
+
+Output plain text only - no markdown syntax (no #, ##, **, or bullet dashes). Use short section labels on their own line (e.g. "Summary", "Key flags", "Referral recommendation") followed by a blank line, then plain sentences or simple numbered lines.`
+
+export function buildReferralPrompt(latest: WeekEntry, flags: PatientFlag[]): string {
+  const flagLines = flags.map((f) => `- ${f.label}: ${f.detail}`).join('\n')
+  return `Patient: Jenny, ${latest.label}.
+Latest readings: sleep ${latest.wearables.sleepHours}h, resting HR ${latest.wearables.restingHeartRate} bpm, blood pressure ${latest.wearables.bpSystolic}/${latest.wearables.bpDiastolic}.
+
+Flags:
+${flagLines || '- None currently flagged.'}
+
+Write the summary and referral now.`
 }
