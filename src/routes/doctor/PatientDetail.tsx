@@ -4,10 +4,11 @@ import { jennyTimeline, patientProfile } from '../../data/patient'
 import { askPeri } from '../../lib/claude'
 import { computeDoctorFlags } from '../../lib/doctorSummary'
 import { REFERRAL_SYSTEM_PROMPT, buildReferralPrompt } from '../../lib/systemPrompts'
+import { useReferral } from '../../state/referral'
 
 export default function PatientDetail() {
   const { patientId } = useParams()
-  const [referral, setReferral] = useState<string | null>(null)
+  const { referral, setReferral } = useReferral()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -105,13 +106,13 @@ export default function PatientDetail() {
           {loading ? 'Generating…' : 'Generate 6-week summary & referral'}
         </button>
         {error && <p className="mt-2 text-xs text-terracotta-700">{error}</p>}
-        {referral && (
+        {referral.text && (
           <div className="mt-4 rounded-2xl border border-sand-200 bg-white p-4">
             <p className="text-xs font-medium uppercase tracking-wide text-ink-500">
-              Summary & referral — visible to Jenny too
+              Summary & referral — visible to Jenny's Care tab too
             </p>
             <p className="mt-2 whitespace-pre-wrap text-sm text-ink-700">
-              {referral}
+              {referral.text}
             </p>
           </div>
         )}

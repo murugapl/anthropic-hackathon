@@ -38,15 +38,15 @@ export default function AskPeri() {
   }
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col px-6 py-12">
-      <h1 className="text-2xl font-semibold text-ink-900">Ask Peri</h1>
+    <div className="flex flex-col px-5 py-2">
+      <h1 className="text-xl font-semibold text-ink-900">Ask Peri</h1>
       <p className="mt-1 text-sm text-ink-500">
         General guidance, not a diagnosis. For anything urgent, contact your
         clinician.
       </p>
 
-      <div className="mt-6">
-        <p className="text-xs font-medium uppercase tracking-wide text-ink-500">
+      <div className="mt-4">
+        <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
           Women at your stage are asking
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -63,7 +63,7 @@ export default function AskPeri() {
         </div>
       </div>
 
-      <div className="mt-6 min-h-[200px] space-y-3 rounded-2xl border border-sand-200 bg-white p-4">
+      <div className="mt-4 min-h-[200px] space-y-3 rounded-2xl border border-sand-200 bg-white p-4">
         {messages.length === 0 && (
           <p className="text-sm text-ink-500">
             Ask anything — about sleep, recovery, feeding, or how you're

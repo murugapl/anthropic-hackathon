@@ -9,7 +9,7 @@ export default function TherapyScheduler() {
 
   if (confirmed) {
     return (
-      <div className="mx-auto max-w-xl px-6 py-12 text-center">
+      <div className="px-5 py-12 text-center">
         <span className="inline-block rounded-full bg-sage-100 px-3 py-1 text-xs font-medium text-sage-700">
           Booked
         </span>
@@ -31,8 +31,8 @@ export default function TherapyScheduler() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-12">
-      <h1 className="text-2xl font-semibold text-ink-900">
+    <div className="px-5 py-2">
+      <h1 className="text-xl font-semibold text-ink-900">
         Schedule virtual therapy
       </h1>
       <p className="mt-2 text-ink-500">

@@ -4,7 +4,7 @@ import { DEFAULT_WEEK_INDEX, jennyTimeline, patientProfile } from '../../data/pa
 import { buildAdviceFeed } from '../../lib/advice'
 import { useBudget } from '../../state/budget'
 
-function StatCard({
+function StatChip({
   label,
   value,
   flagged,
@@ -15,20 +15,14 @@ function StatCard({
 }) {
   return (
     <div
-      className={`rounded-2xl border p-4 ${
-        flagged
-          ? 'border-terracotta-300 bg-terracotta-50'
-          : 'border-sand-200 bg-white'
+      className={`flex-1 rounded-2xl border p-3 ${
+        flagged ? 'border-terracotta-300 bg-terracotta-50' : 'border-sand-200 bg-white'
       }`}
     >
-      <p className="text-xs font-medium uppercase tracking-wide text-ink-500">
+      <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
         {label}
       </p>
-      <p
-        className={`mt-1 text-xl font-semibold ${
-          flagged ? 'text-terracotta-700' : 'text-ink-900'
-        }`}
-      >
+      <p className={`mt-0.5 text-base font-semibold ${flagged ? 'text-terracotta-700' : 'text-ink-900'}`}>
         {value}
       </p>
     </div>
@@ -37,22 +31,21 @@ function StatCard({
 
 export default function PatientHome() {
   const [weekIndex, setWeekIndex] = useState(DEFAULT_WEEK_INDEX)
-  const { budget, setBudget } = useBudget()
+  const { budget } = useBudget()
   const week = jennyTimeline[weekIndex]
   const advice = buildAdviceFeed(week, budget)
+  const topCard = advice[0]
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-12">
-      <h1 className="text-2xl font-semibold text-ink-900">
+    <div className="px-5 py-2">
+      <h1 className="text-xl font-semibold text-ink-900">
         Hi, {patientProfile.name}
       </h1>
-      <p className="mt-1 text-sm text-ink-500">{week.label}</p>
+      <p className="text-sm text-ink-500">{week.label}</p>
 
-      {/* Week scrubber */}
-      <div className="mt-6 rounded-2xl border border-sand-200 bg-white p-4">
-        <label className="flex items-center justify-between text-xs font-medium text-ink-500">
+      <div className="mt-4 rounded-2xl border border-sand-200 bg-white p-3">
+        <label className="flex items-center justify-between text-[10px] font-medium text-ink-500">
           <span>Move through Jenny's story</span>
-          <span>{week.label}</span>
         </label>
         <input
           type="range"
@@ -60,127 +53,38 @@ export default function PatientHome() {
           max={jennyTimeline.length - 1}
           value={weekIndex}
           onChange={(e) => setWeekIndex(Number(e.target.value))}
-          className="mt-2 w-full accent-terracotta-500"
+          className="mt-1 w-full accent-terracotta-500"
         />
-        <p className="mt-2 text-sm text-ink-500">{week.note}</p>
+        <p className="mt-1 text-xs text-ink-500">{week.note}</p>
       </div>
 
-      {/* Today snapshot */}
-      <div className="mt-6 grid grid-cols-3 gap-3">
-        <StatCard
-          label="Sleep"
-          value={`${week.wearables.sleepHours}h`}
-          flagged={week.flags.sleepDebt}
-        />
-        <StatCard
-          label="Resting HR"
-          value={`${week.wearables.restingHeartRate} bpm`}
-          flagged={false}
-        />
-        <StatCard
-          label="Blood pressure"
+      <div className="mt-4 flex gap-2">
+        <StatChip label="Sleep" value={`${week.wearables.sleepHours}h`} flagged={week.flags.sleepDebt} />
+        <StatChip label="HR" value={`${week.wearables.restingHeartRate}`} flagged={false} />
+        <StatChip
+          label="BP"
           value={`${week.wearables.bpSystolic}/${week.wearables.bpDiastolic}`}
           flagged={week.flags.bpElevated}
         />
       </div>
+      <Link to="/patient/trends" className="mt-2 inline-block text-xs text-terracotta-600">
+        See full trends →
+      </Link>
 
-      {/* Budget control */}
-      <div className="mt-6 rounded-2xl border border-sand-200 bg-white p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-ink-500">
-          Your budget
+      <div className="mt-5">
+        <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
+          For you today
         </p>
-        <div className="mt-2 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setBudget({ ...budget, mode: 'budget' })}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${
-              budget.mode === 'budget'
-                ? 'bg-terracotta-500 text-white'
-                : 'bg-sand-100 text-ink-500'
-            }`}
-          >
-            Set a budget
-          </button>
-          <button
-            type="button"
-            onClick={() => setBudget({ ...budget, mode: 'covered' })}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${
-              budget.mode === 'covered'
-                ? 'bg-sage-500 text-white'
-                : 'bg-sand-100 text-ink-500'
-            }`}
-          >
-            Insurance covers this
-          </button>
-          {budget.mode === 'budget' && (
-            <div className="flex items-center gap-2 text-sm text-ink-500">
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={5}
-                value={budget.amount}
-                onChange={(e) =>
-                  setBudget({ ...budget, amount: Number(e.target.value) })
-                }
-                className="accent-terracotta-500"
-              />
-              <span className="font-medium text-ink-900">
-                ${budget.amount}/mo
-              </span>
-            </div>
-          )}
-        </div>
-        <p className="mt-2 text-xs text-ink-500">
-          Every suggestion below respects your budget — a free option is
-          always included.
-        </p>
-      </div>
-
-      {/* Advice feed */}
-      <div className="mt-6 space-y-4">
-        {advice.length === 0 && (
-          <p className="text-sm text-ink-500">
-            Nothing flagged for you this week — take the win.
+        {!topCard && (
+          <p className="mt-2 text-sm text-ink-500">
+            Nothing flagged this week — take the win.
           </p>
         )}
-        {advice.map((card) => (
-          <div
-            key={card.id}
-            className="rounded-2xl border border-sand-200 bg-white p-4"
-          >
-            <h3 className="font-medium text-ink-900">{card.title}</h3>
-            <p className="mt-1 text-sm text-ink-500">{card.body}</p>
-            {card.product && (
-              <div className="mt-3 rounded-xl bg-sand-50 p-3 text-sm">
-                {card.withinBudget ? (
-                  <p className="text-ink-700">
-                    <span className="font-medium text-terracotta-700">
-                      {card.product.name}
-                    </span>{' '}
-                    — ${card.product.price}, within your budget.
-                  </p>
-                ) : (
-                  <p className="text-ink-700">
-                    Free option:{' '}
-                    <span className="font-medium">
-                      {card.product.freeAlternative}
-                    </span>
-                  </p>
-                )}
-                {!card.withinBudget && (
-                  <p className="mt-1 text-xs text-ink-500">
-                    Stretch pick: {card.product.name} (${card.product.price})
-                  </p>
-                )}
-                {card.withinBudget && (
-                  <p className="mt-1 text-xs text-ink-500">
-                    Free option: {card.product.freeAlternative}
-                  </p>
-                )}
-              </div>
-            )}
-            {card.therapyPrompt && (
+        {topCard && (
+          <div className="mt-2 rounded-2xl border border-sand-200 bg-white p-4">
+            <h3 className="font-medium text-ink-900">{topCard.title}</h3>
+            <p className="mt-1 text-sm text-ink-500">{topCard.body}</p>
+            {topCard.therapyPrompt && (
               <Link
                 to="/patient/therapy"
                 className="mt-3 inline-block rounded-full bg-sage-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sage-600"
@@ -188,15 +92,33 @@ export default function PatientHome() {
                 Schedule virtual therapy
               </Link>
             )}
+            {!topCard.therapyPrompt && (
+              <Link
+                to="/patient/shop"
+                className="mt-3 inline-block text-xs font-medium text-terracotta-600"
+              >
+                See this pick in Shop →
+              </Link>
+            )}
           </div>
-        ))}
+        )}
+        {advice.length > 1 && (
+          <Link to="/patient/shop" className="mt-3 block text-xs text-terracotta-600">
+            {advice.length - 1} more recommendation{advice.length - 1 === 1 ? '' : 's'} in Shop →
+          </Link>
+        )}
       </div>
 
       <Link
-        to="/patient/chat"
-        className="mt-8 inline-block rounded-full bg-terracotta-500 px-4 py-2 text-sm font-medium text-white hover:bg-terracotta-600"
+        to="/patient/care"
+        className="mt-6 block rounded-2xl border border-sand-200 bg-white p-4 hover:border-sage-300"
       >
-        Ask Peri
+        <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
+          Your care team
+        </p>
+        <p className="mt-1 text-sm text-ink-700">
+          See updates from your doctor →
+        </p>
       </Link>
     </div>
   )
