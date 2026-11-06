@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import PeriMascot from '../../components/PeriMascot'
 
 function HomeIcon({ active }: { active: boolean }) {
   return (
@@ -67,8 +68,8 @@ export default function PatientShell() {
     <div className="flex h-dvh justify-center bg-ink-100 sm:h-screen sm:items-center sm:py-4">
       <div className="flex h-full w-full max-w-[430px] flex-col overflow-hidden bg-sand-50 shadow-xl sm:h-[860px] sm:rounded-[2.5rem] sm:border sm:border-ink-100">
         <div className="shrink-0 flex items-center justify-between px-5 pb-2 pt-5">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-terracotta-400" />
+          <div className="flex items-center gap-1.5">
+            <PeriMascot size={24} />
             <span className="text-sm font-semibold text-ink-900">Peri</span>
           </div>
           <NavLink to="/" className="text-xs text-ink-500 hover:text-terracotta-600">

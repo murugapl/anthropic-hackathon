@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DEFAULT_WEEK_INDEX, jennyTimeline, patientProfile } from '../../data/patient'
 import { getFunFact } from '../../data/funFacts'
+import { FUN_FACT_ICONS } from '../../components/FunFactIcons'
 import { prepareTopics } from '../../data/prepareTopics'
 import { buildAdviceFeed } from '../../lib/advice'
 import { useBudget } from '../../state/budget'
@@ -62,9 +63,21 @@ export default function PatientHome() {
       </div>
 
       {funFact && (
-        <div className="mt-3 rounded-2xl bg-sage-100 p-3 text-sm text-sage-700">
-          {week.postpartumWeek === null ? '🫛 ' : '✨ '}
-          {funFact}
+        <div className="mt-3 flex items-center gap-3 rounded-2xl bg-sage-100 p-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white">
+            {(() => {
+              const Icon = FUN_FACT_ICONS[funFact.icon]
+              return <Icon size={30} />
+            })()}
+          </div>
+          <div>
+            {funFact.sizeLabel && (
+              <p className="text-xs font-semibold uppercase tracking-wide text-sage-700">
+                {funFact.sizeLabel}
+              </p>
+            )}
+            <p className="text-sm text-sage-700">{funFact.text}</p>
+          </div>
         </div>
       )}
 

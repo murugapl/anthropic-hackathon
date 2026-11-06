@@ -1,4 +1,5 @@
 import { Link, Outlet } from 'react-router-dom'
+import PeriMascot from '../components/PeriMascot'
 
 export default function Layout() {
   return (
@@ -6,7 +7,7 @@ export default function Layout() {
       <header className="border-b border-sand-200 bg-sand-50/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
-            <span className="inline-block h-2.5 w-2.5 rounded-full bg-terracotta-400" />
+            <PeriMascot size={28} />
             <span className="text-lg font-semibold tracking-tight text-ink-900">
               Peri
             </span>

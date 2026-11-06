@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import PeriMascot from '../components/PeriMascot'
 
 export default function Landing() {
   return (
@@ -6,7 +7,8 @@ export default function Landing() {
       <span className="rounded-full bg-sage-100 px-3 py-1 text-xs font-medium text-sage-700">
         Care that doesn't stop at 6 weeks
       </span>
-      <h1 className="mt-6 text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
+      <PeriMascot size={72} />
+      <h1 className="mt-3 text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
         Peri
       </h1>
       <p className="mt-4 max-w-xl text-lg text-ink-500">

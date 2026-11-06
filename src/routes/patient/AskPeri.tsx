@@ -3,6 +3,7 @@ import { DEFAULT_WEEK_INDEX, jennyTimeline } from '../../data/patient'
 import { askPeri, type ChatMessage } from '../../lib/claude'
 import { buildAskPeriSystemPrompt } from '../../lib/systemPrompts'
 import { useBudget } from '../../state/budget'
+import PeriMascot from '../../components/PeriMascot'
 
 const SUGGESTED_QUESTIONS = [
   'Is it normal to still feel this exhausted months in?',
@@ -39,11 +40,15 @@ export default function AskPeri() {
 
   return (
     <div className="flex flex-col px-5 py-2">
-      <h1 className="text-xl font-semibold text-ink-900">Ask Peri</h1>
-      <p className="mt-1 text-sm text-ink-500">
-        General guidance, not a diagnosis. For anything urgent, contact your
-        clinician.
-      </p>
+      <div className="flex items-center gap-3">
+        <PeriMascot size={44} />
+        <div>
+          <h1 className="text-xl font-semibold text-ink-900">Peri</h1>
+          <p className="text-xs text-ink-500">
+            General guidance, not a diagnosis. Urgent? Contact your clinician.
+          </p>
+        </div>
+      </div>
 
       <div className="mt-4">
         <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
@@ -65,24 +70,37 @@ export default function AskPeri() {
 
       <div className="mt-4 min-h-[200px] space-y-3 rounded-2xl border border-sand-200 bg-white p-4">
         {messages.length === 0 && (
-          <p className="text-sm text-ink-500">
-            Ask anything — about sleep, recovery, feeding, or how you're
-            feeling.
-          </p>
+          <div className="flex items-start gap-2">
+            <PeriMascot size={28} />
+            <p className="mt-1 text-sm text-ink-500">
+              Hi, I'm Peri. Ask me anything — about sleep, recovery, feeding,
+              or how you're feeling.
+            </p>
+          </div>
         )}
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
-              m.role === 'user'
-                ? 'ml-auto bg-terracotta-500 text-white'
-                : 'bg-sand-100 text-ink-900'
-            }`}
+            className={`flex items-end gap-2 ${m.role === 'user' ? 'justify-end' : ''}`}
           >
-            {m.content}
+            {m.role === 'assistant' && <PeriMascot size={24} />}
+            <div
+              className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${
+                m.role === 'user'
+                  ? 'bg-terracotta-500 text-white'
+                  : 'bg-sand-100 text-ink-900'
+              }`}
+            >
+              {m.content}
+            </div>
           </div>
         ))}
-        {loading && <p className="text-xs text-ink-500">Peri is typing…</p>}
+        {loading && (
+          <div className="flex items-center gap-2">
+            <PeriMascot size={24} />
+            <p className="text-xs text-ink-500">Peri is typing…</p>
+          </div>
+        )}
         {error && <p className="text-xs text-terracotta-700">{error}</p>}
       </div>
 
