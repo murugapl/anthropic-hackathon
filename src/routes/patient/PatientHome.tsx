@@ -96,6 +96,27 @@ export default function PatientHome() {
         See full trends →
       </Link>
 
+      {week.flags.lowMood && (
+        <div className="mt-4 rounded-2xl bg-sage-100 p-4">
+          <p className="text-[10px] font-medium uppercase tracking-wide text-sage-700">
+            Checking in
+          </p>
+          <p className="mt-1 text-sm font-medium text-ink-900">
+            It looks like it's been a hard stretch. You're not alone.
+          </p>
+          <p className="mt-1 text-xs text-sage-700">
+            Many women feel this way in the months after birth. Talking to
+            someone can help.
+          </p>
+          <Link
+            to="/patient/therapy"
+            className="mt-3 inline-block rounded-full bg-sage-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sage-600"
+          >
+            Talk to someone
+          </Link>
+        </div>
+      )}
+
       <div className="mt-5">
         <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
           For you today

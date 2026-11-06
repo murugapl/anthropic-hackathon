@@ -20,6 +20,18 @@ function productById(id: string): Product {
 export function buildAdviceFeed(week: WeekEntry, budget: BudgetState): AdviceCard[] {
   const cards: AdviceCard[] = []
 
+  // Blood pressure first: it's the safety-relevant signal (the 6-week cliff).
+  if (week.flags.bpElevated) {
+    const product = productById('compression-socks')
+    cards.push({
+      id: 'bp',
+      title: 'Your blood pressure has been trending up',
+      body: 'This is worth mentioning to your doctor, even outside a scheduled visit. In the meantime, this can help with swelling.',
+      product,
+      withinBudget: isWithinBudget(budget, product.price),
+    })
+  }
+
   if (week.flags.sleepDebt) {
     const isPregnant = week.postpartumWeek === null
     const product = productById('nursing-pillow')
@@ -42,17 +54,6 @@ export function buildAdviceFeed(week: WeekEntry, budget: BudgetState): AdviceCar
       id: 'breastfeeding',
       title: 'Early breastfeeding can be rough on you',
       body: 'Nipple soreness is common in the first few weeks. Here is something that helps it heal faster.',
-      product,
-      withinBudget: isWithinBudget(budget, product.price),
-    })
-  }
-
-  if (week.flags.bpElevated) {
-    const product = productById('compression-socks')
-    cards.push({
-      id: 'bp',
-      title: 'Your blood pressure has been trending up',
-      body: 'This is worth mentioning to your doctor, even outside a scheduled visit. In the meantime, this can help with swelling.',
       product,
       withinBudget: isWithinBudget(budget, product.price),
     })
