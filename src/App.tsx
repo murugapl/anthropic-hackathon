@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { BudgetProvider } from './state/BudgetProvider'
 import { ReferralProvider } from './state/ReferralProvider'
@@ -16,11 +17,22 @@ import TherapyScheduler from './routes/patient/TherapyScheduler'
 import DoctorDashboard from './routes/doctor/DoctorDashboard'
 import PatientDetail from './routes/doctor/PatientDetail'
 
+// Scripted demo video stage (see src/film/Film.tsx). Lazy so it never weighs on the app.
+const Film = lazy(() => import('./film/Film'))
+
 function App() {
   return (
     <BudgetProvider>
       <ReferralProvider>
         <Routes>
+          <Route
+            path="film"
+            element={
+              <Suspense fallback={null}>
+                <Film />
+              </Suspense>
+            }
+          />
           <Route element={<Layout />}>
             <Route index element={<Landing />} />
             <Route path="doctor" element={<DoctorDashboard />} />

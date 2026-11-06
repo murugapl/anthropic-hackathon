@@ -26,6 +26,12 @@ export async function askPeri(
   systemPrompt: string,
   messages: ChatMessage[],
 ): Promise<string> {
+  // Scripted demo video (/film): when the app runs inside the film stage, the
+  // stage supplies a prewritten response so the recording is deterministic and
+  // needs no API key. Never active in normal use.
+  const film = filmResponder()
+  if (film) return film(systemPrompt, messages)
+
   if (!client) throw new ClaudeNotConfiguredError()
 
   const response = await client.messages.create({
@@ -37,4 +43,16 @@ export async function askPeri(
 
   const textBlock = response.content.find((block) => block.type === 'text')
   return textBlock && textBlock.type === 'text' ? textBlock.text : ''
+}
+
+type FilmResponder = (systemPrompt: string, messages: ChatMessage[]) => Promise<string>
+
+function filmResponder(): FilmResponder | null {
+  try {
+    if (window.parent === window) return null
+    const film = (window.parent as unknown as { __periFilm?: { respond?: FilmResponder } }).__periFilm
+    return film?.respond ?? null
+  } catch {
+    return null
+  }
 }
